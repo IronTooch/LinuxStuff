@@ -24,8 +24,19 @@ BWHT="\[\033[47m\]" # background white
 
 IPADDR=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}')
 
+if [ -n "$force_color_prompt" ]; then
+	if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+		# We have color support; assume it's compliant with Ecma-48
+		# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+		# a case would tend to support setf rather than setaf.)
+		color_prompt=yes
+	else
+		color_prompt=
+	fi
+fi
+
 if [ "$color_prompt" = yes ]; then
-    PS1="$HC$FYEL[$FBLE${debian_chroot:+($debian_chroot)}$FRED\u@\h$FBLE($IPADDR)$FYEL: $FCYN\w$FYEL]\\$ $RS"
+	PS1="$HC$FYEL[$FRED\u$FBLE@$FGRN\h$FBLE($IPADDR)$FYEL: $FCYN\w$FYEL]\\$ $RS"
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
